@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HDMIRes</string>
+
+    <string name="category_hdmi_title">HDMI</string>
+
+    <string name="service_active_title">Use HDMI Service</string>
+    <string name="service_active_summary">Resize the screen when HDMI is plugged/unplugged</string>
+
+    <string name="width">Screen width</string>
+    <string name="height">Screen height</string>
+    <string name="density">Screen density</string>
+
+    <string name="default_width">2560</string>
+    <string name="default_height">1440</string>
+    <string name="default_density">320</string>
+</resources>
