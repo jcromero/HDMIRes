@@ -33,18 +33,19 @@ import java.io.DataOutputStream;
 public class HDMIService extends Service {
 
     private SharedPreferences mPref;
-    private boolean HDMIplugged = false;
+    private boolean mHDMIplugged = false;
+    private boolean mAlwaysResize = false;
+    private boolean mHDMIResize = false;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            boolean active = mPref.getBoolean("service_active", true);
-            if (active && "android.intent.action.HDMI_PLUGGED".equals(action)) {
-                HDMIplugged = intent.getBooleanExtra("state", false);
+            if ("android.intent.action.HDMI_PLUGGED".equals(action)) {
+                mHDMIplugged = intent.getBooleanExtra("state", false);
                 resizeDisplay();
-            } else if (active && "com.sbradymobile.hdmires.RESIZE_DISPLAY".equals(action)) {
+            } else if ("com.sbradymobile.hdmires.RESIZE_DISPLAY".equals(action)) {
                 resizeDisplay();
             }
         }
@@ -62,6 +63,8 @@ public class HDMIService extends Service {
         IntentFilter filter = new IntentFilter("android.intent.action.HDMI_PLUGGED");
         filter.addAction("com.sbradymobile.hdmires.RESIZE_DISPLAY");
         registerReceiver(mReceiver, filter);
+
+        resizeDisplay();
     }
 
     @Override
@@ -76,17 +79,20 @@ public class HDMIService extends Service {
     }
 
     private void resizeDisplay() {
+        mAlwaysResize = mPref.getBoolean("screen_active", false);
+        mHDMIResize = mPref.getBoolean("service_active", true);
         try {
-            String width = mPref.getString("width", "2560");
-            String height = mPref.getString("height", "1440");
-            String density = mPref.getString("density", "320");
-            String resolution = HDMIplugged ? (width + "x" + height) : "reset";
-            density = HDMIplugged ? density : "reset";
-            String size = "am display-size " + resolution;
+            boolean hdmi = mHDMIResize && mHDMIplugged;
+            String width = mPref.getString(hdmi ? "width" : "screen_width", "2560");
+            String height = mPref.getString(hdmi ? "height" : "screen_height", hdmi ? "1440" : "1600");
+            String density = mPref.getString(hdmi ? "density" : "screen_density", "320");
+            String resolution = hdmi || mAlwaysResize ? (width + "x" + height) : "reset";
+            density = hdmi || mAlwaysResize ? density : "reset";
+            resolution = "am display-size " + resolution;
             density = "am display-density " + density;
             Process suProcess = Runtime.getRuntime().exec("su"); 
             DataOutputStream out = new DataOutputStream(suProcess.getOutputStream());
-            out.writeBytes(size);
+            out.writeBytes(resolution);
             out.flush();
             out.close();
             suProcess = Runtime.getRuntime().exec("su"); 

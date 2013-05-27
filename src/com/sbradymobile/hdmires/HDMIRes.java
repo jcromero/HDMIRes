@@ -58,6 +58,8 @@ public class HDMIRes extends Activity {
         mTabsAdapter = new TabsAdapter(this, mViewPager);
         mTabsAdapter.addTab(bar.newTab().setText(R.string.category_hdmi_title),
                 HDMIFragment.class, null);
+        mTabsAdapter.addTab(bar.newTab().setText(R.string.category_screen_title),
+                ScreenFragment.class, null);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));

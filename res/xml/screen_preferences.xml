@@ -2,30 +2,30 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
-        android:key="service_active"
-        android:title="@string/service_active_title"
-        android:summary="@string/service_active_summary"
-        android:defaultValue="true" />
+        android:key="screen_active"
+        android:title="@string/screen_active_title"
+        android:summary="@string/screen_active_summary"
+        android:defaultValue="false" />
 
     <EditTextPreference
-        android:key="width"
+        android:key="screen_width"
         android:title="@string/width"
         android:dialogTitle="@string/width"
-        android:dependency="service_active"
+        android:dependency="screen_active"
         android:defaultValue="@string/default_width"/>
 
     <EditTextPreference
-        android:key="height"
+        android:key="screen_height"
         android:title="@string/height"
         android:dialogTitle="@string/height"
-        android:dependency="service_active"
-        android:defaultValue="@string/default_hdmi_height"/>
+        android:dependency="screen_active"
+        android:defaultValue="@string/default_screen_height"/>
 
     <EditTextPreference
-        android:key="density"
+        android:key="screen_density"
         android:title="@string/density"
         android:dialogTitle="@string/density"
-        android:dependency="service_active"
+        android:dependency="screen_active"
         android:defaultValue="@string/default_density"/>
 
 </PreferenceScreen>
